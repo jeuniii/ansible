@@ -1,0 +1,29 @@
+# my global config
+global:
+  scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+scrape_configs:
+
+  - job_name: 'Kubernetes_Minions'
+    metrics_path: '/metrics'
+    static_configs:
+       - targets:
+     {% for host in groups['kubernetes-minions'] %}
+       - {{ host }}:4194
+     {% endfor %}
+
+  - job_name: 'HA_Proxy'
+    static_configs:
+       - targets:
+     {% for host in groups['load-balancers'] %}
+       - {{ host }}:9100
+     {% endfor %}
+
+  - job_name: 'Redis'
+    static_configs:
+       - targets:
+     {% for host in groups['redis'] %}
+       - {{ host }}:9121
+     {% endfor %}
