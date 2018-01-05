@@ -1,0 +1,12 @@
+---
+- name: Download & Configre Redis agent.
+  hosts: redis
+  tasks:
+   - name: Downloading Redis agent.
+     get_url: url=https://arm.mo.ca.am.ericsson.se/artifactory/proj-csdp-external-local/redis_exporter dest=/etc/ mode=0740
+   - name: Copy the Redis service file.
+     template: src=../templates/redis_exporter.service.j2 dest=/etc/systemd/system/redis_exporter.service owner=root mode=u+rwx
+   - name: Reload the daemon.
+     shell: systemctl daemon-reload
+   - name: Start the Agent.
+     service: name=redis_exporter state=restarted enabled=yes
