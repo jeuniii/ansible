@@ -1,0 +1,9 @@
+[Unit]
+Description=HA Exporter
+
+[Service]
+User=root
+ExecStart=/etc/haproxy_exporter -haproxy.scrape-uri 'http://localhost:8181/;csv' &
+
+[Install]
+WantedBy=default.target
