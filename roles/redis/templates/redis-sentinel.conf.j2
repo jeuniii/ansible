@@ -1,0 +1,11 @@
+port 26379
+daemonize yes
+syslog-enabled yes
+logfile /var/log/redis/sentinel.log
+
+# Master config
+
+sentinel monitor mymaster {{ groups['redis-master'][0] }} 6379 2
+sentinel down-after-milliseconds mymaster 5000
+sentinel failover-timeout mymaster 900000
+sentinel auth-pass mymaster {{ redis_password }}
