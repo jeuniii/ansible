@@ -1,0 +1,31 @@
+---
+- hosts: redis
+
+  vars:
+    proxy_env:
+      https_proxy:
+      http_proxy:
+
+  tasks:
+
+  - name: Install redis.
+    yum:
+      name: redis-3.0.7
+      state: present
+    environment: "{{ proxy_env }}"
+
+  - name: Configure redis.
+    template: src=../templates/redis.conf.j2 dest=/etc/redis.conf
+
+  - name: Configure redis sentinel.
+    template: src=../templates/redis-sentinel.conf.j2 dest=/etc/redis-sentinel.conf
+
+  - name: Start redis.
+    service: name=redis state=restarted enabled=yes
+
+  - name: Start redis sentinel
+    service: name=redis-sentinel state=restarted enabled=yes
+
+  - name: Configure replication
+    when: ansible_default_ipv4.address != groups['redis-master'][0]
+    shell: redis-cli -a {{ redis_password }} -h {{ ansible_default_ipv4.address }} slaveof {{ groups['redis-master'][0] }} 6379
