@@ -1,0 +1,9 @@
+[Unit]
+Description=Redis Exporter
+
+[Service]
+User=root
+ExecStart=/etc/redis_exporter -redis.addr {{ ansible_default_ipv4.address }}:6379 -redis.password '{{ redis_password }}'
+
+[Install]
+WantedBy=default.target
