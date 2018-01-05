@@ -1,0 +1,7 @@
+---
+# This play book downloads the relevant prometheus agents and configures them on the remote nodes as a service.
+
+- import_playbook: deploy_haproxy_agent.yaml
+- import_playbook: deploy_redis_agent.yaml
+- import_playbook: install_prometheus.yaml
+- import_playbook: install_grafana.yaml
