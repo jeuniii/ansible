@@ -1,0 +1,12 @@
+---
+- name: Download & Configre HA Proxy agent.
+  hosts: load-balancers
+  tasks:
+   - name: Downloading HA Proxy agent.
+     get_url: url=https://arm.mo.ca.am.ericsson.se/artifactory/proj-csdp-external-local/haproxy_exporter dest=/etc/ mode=0740
+   - name: Copy the HA Proxy service file.
+     copy: src=../files/haproxy_exporter.service dest=/etc/systemd/system owner=root mode=u+rwx
+   - name: Reload the daemon.
+     shell: systemctl daemon-reload
+   - name: Start the Agent.
+     service: name=haproxy_exporter state=restarted enabled=yes
